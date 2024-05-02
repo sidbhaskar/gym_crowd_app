@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:gym_crowd_app/widgets/info_box.dart';
 import '../controller/calendar_controller.dart';
 import '../controller/timepicker_controller.dart';
+import '../widgets/analytics_dropdown.dart';
+import '../widgets/visitcount.dart';
 
 class StatsPage extends StatelessWidget {
   const StatsPage({super.key});
@@ -13,30 +15,49 @@ class StatsPage extends StatelessWidget {
     final TimePickerController timePickerController =
         Get.put(TimePickerController());
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              DateFormat('dd-MM-yyyy').format(
-                  calendarController.selectedDay.value), // Format the date
-              style: const TextStyle(fontSize: 20, color: Colors.white),
-            ),
-            Obx(() {
-              final selectedTime = timePickerController.selectedTime.value;
-              final formattedHour = selectedTime.hour % 12;
-              final amPm = selectedTime.hour >= 12 ? 'PM' : 'AM';
+      appBar: AppBar(
+        title: const Text('CROWD PREDICTION'),
+      ),
+      body: Column(
+        children: [
+          // Info Box
+          InfoBox(),
 
-              return Text(
-                '${formattedHour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')} $amPm',
-                style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              );
-            }),
-          ],
-        ),
+          SizedBox(height: 20),
+          Container(
+            width: MediaQuery.sizeOf(context).width * 0.9,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Day Analytics',
+                  style: TextStyle(fontSize: 22, color: Colors.white),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white70,
+                      borderRadius:
+                          BorderRadius.circular(10), // Add rounded corners
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 18.0),
+                      child: AnalyticsDropdown(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            child: VisitCountScreen(),
+          ),
+          ElevatedButton(
+            onPressed: () {},
+            child: Text('Comfirm'),
+          ),
+        ],
       ),
     );
   }
