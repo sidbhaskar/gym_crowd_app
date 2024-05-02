@@ -9,7 +9,7 @@ class VisitCountScreen extends StatefulWidget {
 }
 
 class _VisitCountScreenState extends State<VisitCountScreen> {
-  Future<List<_VisitData>> fetchVisitCount() async {
+  Future<List<VisitData>> fetchVisitCount() async {
     const url = 'http://54.234.163.158:5000/get_visit_count/?date=2024-04-28';
     try {
       final response = await http.get(Uri.parse(url));
@@ -18,7 +18,7 @@ class _VisitCountScreenState extends State<VisitCountScreen> {
         final data = json.decode(response.body);
         final visitCounts = data['visit_counts'] as Map<String, dynamic>;
         return visitCounts.entries
-            .map((entry) => _VisitData(int.parse(entry.key), entry.value))
+            .map((entry) => VisitData(int.parse(entry.key), entry.value))
             .toList();
       } else {
         throw Exception('Failed to load visit count: ${response.reasonPhrase}');
@@ -30,42 +30,37 @@ class _VisitCountScreenState extends State<VisitCountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Visit Count'),
-      ),
-      body: FutureBuilder<List<_VisitData>>(
-        future: fetchVisitCount(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            return Container(
-              padding: EdgeInsets.all(16.0),
-              height: 300,
-              child: SfCartesianChart(
-                primaryXAxis: CategoryAxis(),
-                series: <ColumnSeries<_VisitData, int>>[
-                  ColumnSeries<_VisitData, int>(
-                    width: 0.05,
-                    dataSource: snapshot.data!,
-                    xValueMapper: (_VisitData visit, _) => visit.hour,
-                    yValueMapper: (_VisitData visit, _) => visit.count,
-                  )
-                ],
-              ),
-            );
-          }
-        },
-      ),
+    return FutureBuilder<List<VisitData>>(
+      future: fetchVisitCount(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          return Container(
+            padding: EdgeInsets.all(16.0),
+            height: 400,
+            child: SfCartesianChart(
+              primaryXAxis: CategoryAxis(),
+              series: <ColumnSeries<VisitData, int>>[
+                ColumnSeries<VisitData, int>(
+                  width: 0.05,
+                  dataSource: snapshot.data!,
+                  xValueMapper: (VisitData visit, _) => visit.hour,
+                  yValueMapper: (VisitData visit, _) => visit.count,
+                )
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 }
 
-class _VisitData {
-  _VisitData(this.hour, this.count);
+class VisitData {
+  VisitData(this.hour, this.count);
 
   final int hour;
   final int count;

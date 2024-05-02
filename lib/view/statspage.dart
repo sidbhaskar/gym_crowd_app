@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gym_crowd_app/widgets/info_box.dart';
+
 import '../controller/calendar_controller.dart';
 import '../controller/timepicker_controller.dart';
 import '../widgets/analytics_dropdown.dart';
