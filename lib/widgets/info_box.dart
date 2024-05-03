@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../controller/calendar_controller.dart';
 import '../controller/timepicker_controller.dart';
+import 'visitcount.dart';
 
 class InfoBox extends StatelessWidget {
   const InfoBox({super.key});
@@ -89,26 +90,22 @@ class InfoBox extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(18.0),
             child: Container(
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(
+                      const Text(
                         'Actual Users',
                         style: const TextStyle(
                             fontSize: 14, color: Colors.white70),
                       ),
-                      Text(
-                        'Data',
-                        style:
-                            const TextStyle(fontSize: 16, color: Colors.white),
-                      ),
+                      VisitCountWidget(),
                     ],
                   ),
-                  Column(
+                  const Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
